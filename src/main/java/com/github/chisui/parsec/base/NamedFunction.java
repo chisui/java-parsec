@@ -10,6 +10,9 @@ public class NamedFunction<A, B> implements Function<A, B> {
     @NonNull String name;
     @NonNull Function<A, B> f;
 
+    @SuppressWarnings({
+            "unchecked", "rawtypes", // narrow Function
+    })
     public static <A, B> NamedFunction<A, B> named(
             @NonNull String name,
             @NonNull Function<? super A, ? extends B> f) {

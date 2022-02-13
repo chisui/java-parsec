@@ -34,6 +34,9 @@ public interface Parser<E, R> {
         return bimap(f, id());
     }
 
+    @SuppressWarnings({
+            "unchecked", "rawtypes", // narrow Function
+    })
     default <F, S> Parser<F, S> bimap(
             @NonNull Function<? super E, ? extends F> f,
             @NonNull Function<? super R, ? extends S> g) {
@@ -50,6 +53,9 @@ public interface Parser<E, R> {
         return biFlatMap(named("error", Parser::error), f);
     }
 
+    @SuppressWarnings({
+            "unchecked", "rawtypes", // narrow Function
+    })
     default <F, S> Parser<F, S> biFlatMap(
             @NonNull Function<? super E, ? extends Parser<? extends F, ? extends S>> f,
             @NonNull Function<? super R, ? extends Parser<? extends F, ? extends S>> g) {
@@ -143,6 +149,9 @@ public interface Parser<E, R> {
         return zeroOrMore(p, List.collector());
     }
 
+    @SuppressWarnings({
+            "unchecked", "rawtypes", // narrow Collector
+    })
     static <X, E, A, R, S> Parser<X, S> zeroOrMore(
             @NonNull Parser<? extends E, ? extends R> p,
             @NonNull Collector<? super R, A, S> col) {
@@ -153,12 +162,16 @@ public interface Parser<E, R> {
         return oneOrMore(p, List.collector());
     }
 
+    @SuppressWarnings({
+            "unchecked", "rawtypes", // narrow Collector
+    })
     static <E, A, R, S> Parser<E, S> oneOrMore(
             @NonNull Parser<? extends E, ? extends R> p,
             @NonNull Collector<? super R, A, S> col) {
         return new OneOrMore<>(narrow(p), (Collector) col);
     }
 
+    @SafeVarargs
     static <E, A> Parser<E, A> or(Parser<? extends E, ? extends A>... px) {
         return FirstMatch.of(px);
     }
