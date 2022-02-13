@@ -68,6 +68,26 @@ public class StreamInput implements Input {
         private Window prev;
         private Window next;
 
+        @Override
+        public boolean isTail() {
+            return isTail;
+        }
+
+        @Override
+        public byte[] volatileBytes() {
+            return volatileBytes;
+        }
+
+        @Override
+        public int start() {
+            return start;
+        }
+
+        @Override
+        public int end() {
+            return end;
+        }
+
         private Window read(int size) throws IOException {
             checkReadable();
             if (hasBufferedInput()) {
@@ -181,10 +201,15 @@ public class StreamInput implements Input {
         return window.mark();
     }
 
-    @AllArgsConstructor
     private static class Marker implements Input.Marker {
         private final WeakReference<Window> window;
         private final int offset;
+
+        private Marker(WeakReference<Window> window, int offset) {
+            this.window = window;
+            this.offset = offset;
+        }
+
         @Override
         public void rewind() throws IOException {
             Window w = this.window.get();

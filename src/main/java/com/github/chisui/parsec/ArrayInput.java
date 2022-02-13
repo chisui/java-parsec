@@ -4,14 +4,21 @@ import lombok.RequiredArgsConstructor;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-@RequiredArgsConstructor(staticName = "of")
 public class ArrayInput implements Input, Input.Chunk {
 
     private final byte[] bytes;
     private int start;
     private int end;
 
-    static ArrayInput of(String str) {
+    private ArrayInput(byte[] bytes) {
+        this.bytes = bytes;
+    }
+
+    public static ArrayInput of(byte[] bytes) {
+        return new ArrayInput(bytes);
+    }
+
+    public static ArrayInput of(String str) {
         return of(str.getBytes(UTF_8));
     }
 

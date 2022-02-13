@@ -37,7 +37,7 @@ public interface Parser<E, R> {
     default <F, S> Parser<F, S> bimap(
             @NonNull Function<? super E, ? extends F> f,
             @NonNull Function<? super R, ? extends S> g) {
-        return new Mapped<>(this, (Function<R, S>) g, (Function<E, F>) f);
+        return new Mapped<E, F, R, S>(this, (Function) g, (Function) f);
     }
 
     default <F> Parser<F, R> flatMapErr(
@@ -53,9 +53,7 @@ public interface Parser<E, R> {
     default <F, S> Parser<F, S> biFlatMap(
             @NonNull Function<? super E, ? extends Parser<? extends F, ? extends S>> f,
             @NonNull Function<? super R, ? extends Parser<? extends F, ? extends S>> g) {
-        return new FlatMapped<>(this,
-                (Function<E, Parser<F, S>>) f,
-                (Function<R, Parser<F, S>>) g);
+        return new FlatMapped<E, F, R, S>(this, (Function) f, (Function) g);
     }
 
     default <B, C> Parser<E, C> then(
@@ -148,7 +146,7 @@ public interface Parser<E, R> {
     static <X, E, A, R, S> Parser<X, S> zeroOrMore(
             @NonNull Parser<? extends E, ? extends R> p,
             @NonNull Collector<? super R, A, S> col) {
-        return new ZeroOrMore<>(narrow(p), (Collector<R, A, S>) col);
+        return new ZeroOrMore<>(narrow(p), (Collector) col);
     }
 
     static <E, R> Parser<E, List<R>> oneOrMore(@NonNull Parser<? extends E, ? extends R> p) {
@@ -158,7 +156,7 @@ public interface Parser<E, R> {
     static <E, A, R, S> Parser<E, S> oneOrMore(
             @NonNull Parser<? extends E, ? extends R> p,
             @NonNull Collector<? super R, A, S> col) {
-        return new OneOrMore<>(narrow(p), (Collector<R, A, S>) col);
+        return new OneOrMore<>(narrow(p), (Collector) col);
     }
 
     static <E, A> Parser<E, A> or(Parser<? extends E, ? extends A>... px) {
